@@ -1,7 +1,4 @@
 import os
-import requests
-import asyncio
-import aiohttp
 import xml.etree.ElementTree as ET
 from asynchronous import async_soap_request
 
@@ -18,8 +15,8 @@ async def get_caregiver_id(caregiver_code):
             <SearchCaregivers xmlns="https://www.hhaexchange.com/apis/hhaws.integration">
               <Authentication>
                 <AppName>{app_name}</AppName>
-                <AppSecret>{app_secret}</AppSecret>
-                <AppKey>{app_key}</AppKey>
+                <AppSecret>{api_secret}</AppSecret>
+                <AppKey>{api_key}</AppKey>
               </Authentication>
               <SearchFilters>
                 <CaregiverCode>{caregiver_code}</CaregiverCode>
@@ -42,8 +39,8 @@ async def get_teams():
         <GetCaregiverTeams xmlns="https://www.hhaexchange.com/apis/hhaws.integration">
           <Authentication>
             <AppName>{app_name}</AppName>
-            <AppSecret>{app_secret}</AppSecret>
-            <AppKey>{app_key}</AppKey>
+            <AppSecret>{api_secret}</AppSecret>
+            <AppKey>{api_key}</AppKey>
           </Authentication>
           <OfficeID>2365</OfficeID>
         </GetCaregiverTeams>
@@ -66,8 +63,8 @@ async def get_notification_methods():
         <GetCaregiverNotificationMethods xmlns="https://www.hhaexchange.com/apis/hhaws.integration">
           <Authentication>
             <AppName>{app_name}</AppName>
-            <AppSecret>{app_secret}</AppSecret>
-            <AppKey>{app_key}</AppKey>
+            <AppSecret>{api_secret}</AppSecret>
+            <AppKey>{api_key}</AppKey>
           </Authentication>
         </GetCaregiverNotificationMethods>
       </soap:Body>

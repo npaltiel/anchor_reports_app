@@ -39,8 +39,8 @@ async def update_team(caregiver, team):
             <UpdateCaregiverDemographics xmlns="https://www.hhaexchange.com/apis/hhaws.integration">
               <Authentication>
                 <AppName>{app_name}</AppName>
-                <AppSecret>{app_secret}</AppSecret>
-                <AppKey>{app_key}</AppKey>
+                <AppSecret>{api_secret}</AppSecret>
+                <AppKey>{api_key}</AppKey>
               </Authentication>
               <CaregiverInfo>
                 <CaregiverID>{caregiver_id}</CaregiverID>
