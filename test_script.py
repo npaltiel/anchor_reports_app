@@ -166,57 +166,56 @@ async def main(files, file_names):
 
     make_tier1 = pd.concat([make_tier1, back_to_1], ignore_index=True)
 
-    test_dict = active_caregivers.to_dict(orient='index')
-    prob_dict = make_probation.to_dict(orient='index')
-    tier1_dict = make_tier1.to_dict(orient='index')
-    tier2_dict = make_tier2.to_dict(orient='index')
+    
+    prob_dict = active_caregivers.to_dict(orient='index')
+    tier1_dict = active_caregivers.to_dict(orient='index')
+    tier2_dict = active_caregivers.to_dict(orient='index')
 
     teams_dict = await get_teams()
     # Gather async tasks for team updates
 
     results = await asyncio.gather(
-        *(update_team(test_dict[caregiver], teams_dict['Tier 1']) for caregiver in test_dict)
-        # *(update_team(prob_dict[caregiver], teams_dict['Probation']) for caregiver in prob_dict),
-        # *(update_team(tier1_dict[caregiver], teams_dict['Tier 1']) for caregiver in tier1_dict),
-        # *(update_team(tier2_dict[caregiver], teams_dict['Tier 2']) for caregiver in tier2_dict)
+        *(update_team(prob_dict[caregiver], teams_dict['Probation']) for caregiver in prob_dict),
+        *(update_team(tier1_dict[caregiver], teams_dict['Tier 1']) for caregiver in tier1_dict),
+        *(update_team(tier2_dict[caregiver], teams_dict['Tier 2']) for caregiver in tier2_dict)
     )
 
-    # retry_caregivers = [caregiver_code for caregiver_code, success, error_message in results if
-    #                     not success]
-    # retry_prob = {
-    #     key: details for key, details in prob_dict.items()
-    #     if details.get('Caregiver Code - Office') in retry_caregivers
-    # }
-    # retry_tier1 = {
-    #     key: details for key, details in tier1_dict.items()
-    #     if details.get('Caregiver Code - Office') in retry_caregivers
-    # }
-    # retry_tier2 = {
-    #     key: details for key, details in tier2_dict.items()
-    #     if details.get('Caregiver Code - Office') in retry_caregivers
-    # }
+    retry_caregivers = [caregiver_code for caregiver_code, success, error_message in results if
+                        not success]
+    retry_prob = {
+        key: details for key, details in prob_dict.items()
+        if details.get('Caregiver Code - Office') in retry_caregivers
+    }
+    retry_tier1 = {
+        key: details for key, details in tier1_dict.items()
+        if details.get('Caregiver Code - Office') in retry_caregivers
+    }
+    retry_tier2 = {
+        key: details for key, details in tier2_dict.items()
+        if details.get('Caregiver Code - Office') in retry_caregivers
+    }
 
-    # results2 = await asyncio.gather(
-    #     *(update_team(retry_prob[caregiver], teams_dict['Probation']) for caregiver in retry_prob),
-    #     *(update_team(retry_tier1[caregiver], teams_dict['Tier 1']) for caregiver in retry_tier1),
-    #     *(update_team(retry_tier2[caregiver], teams_dict['Tier 2']) for caregiver in retry_tier2)
-    # )
+    results2 = await asyncio.gather(
+        *(update_team(retry_prob[caregiver], teams_dict['Probation']) for caregiver in retry_prob),
+        *(update_team(retry_tier1[caregiver], teams_dict['Tier 1']) for caregiver in retry_tier1),
+        *(update_team(retry_tier2[caregiver], teams_dict['Tier 2']) for caregiver in retry_tier2)
+    )
 
     # Count successes and collect failure codes
     first_success_count = sum(1 for _, success, _ in results if success)
-    # second_success_count = sum(1 for _, success, _ in results2 if success)
-    # failed_caregivers = [(caregiver_code, error_message) for caregiver_code, success, error_message in results2 if
-                        #  not success]
+    second_success_count = sum(1 for _, success, _ in results2 if success)
+    failed_caregivers = [(caregiver_code, error_message) for caregiver_code, success, error_message in results2 if
+                         not success]
 
-    # # Output results
-    # print(f"Initial successes: {first_success_count}")
-    # print(f"Secondary successes: {second_success_count}")
-    # print(f"Total failures: {len(failed_caregivers)}")
-    # print("Failed Caregiver Codes and Error Messages:")
+    # Output results
+    print(f"Initial successes: {first_success_count}")
+    print(f"Secondary successes: {second_success_count}")
+    print(f"Total failures: {len(failed_caregivers)}")
+    print("Failed Caregiver Codes and Error Messages:")
 
-    # for caregiver_code, error_message in failed_caregivers:
-    #     print(f"Caregiver Code: {caregiver_code}, Error: {error_message}")
+    for caregiver_code, error_message in failed_caregivers:
+        print(f"Caregiver Code: {caregiver_code}, Error: {error_message}")
 
-    return (f"Successes: {first_success_count}")
+    return (f"Initial Successes: {first_success_count} /n Secondary Successes: {second_success_count} /n Failures: {len(failed_caregivers)}")
 
 
