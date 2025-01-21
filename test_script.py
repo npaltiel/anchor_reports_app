@@ -199,6 +199,7 @@ async def main(notes, caregivers, final):
     for caregiver_code, error_message in failed_caregivers:
         print(f"Caregiver Code: {caregiver_code}, Error: {error_message}")
 
-    return (f"Initial Successes: {first_success_count} /n Secondary Successes: {second_success_count} /n Failures: {len(failed_caregivers)}")
-
+    return (f"Initial Successes: {first_success_count} <br> "
+            f"Secondary Successes: {second_success_count} <br> "
+            f"Failures: {len(failed_caregivers)}")
 
