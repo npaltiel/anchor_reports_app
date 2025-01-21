@@ -10,16 +10,16 @@ def home():
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
-    files = request.files.getlist('files')  # Get the list of uploaded files
-    if files:
-        file_names = [file.filename for file in files]  # Extract file names
-        print(f"Uploaded files: {file_names}")  # For debugging
-        
-        # Pass file names and files to your script
-        results = asyncio.run(test_script.main(files, file_names))
-        return results  # Return the results
-    else:
-        return "No files uploaded!"
+    notes = request.files.get('Notes')  # Access file from 'file1' field
+    caregivers = request.files.get('Caregivers')  # Access file from 'file2' field
+    final = request.files.get('Final')
+
+    # Check if files are uploaded
+    if not notes or not caregivers or not final:
+        return "All three files must be uploaded!", 400
+    
+    results = asyncio.run(test_script.main(notes, caregivers, final))
+    return results  # Return the results
     
 if __name__ == '__main__':
     app.run(debug=True)

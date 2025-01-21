@@ -6,29 +6,12 @@ from get_requests import get_teams, get_notification_methods
 from post_team import update_team
 
 
-async def main(files, file_names):
-    df_caregivers, df_notes, df_final = None, None, None
-    for file, name in zip(files, file_names):
-        try:
-            if "list of caregivers" in name.lower():
-                df_caregivers = pd.read_csv(file)
-            elif "notes" in name.lower():
-                df_notes = pd.read_csv(file)
-            elif "final" in name.lower():
-                df_final = pd.read_csv(file)
-            else:
-                return f"Unexpected file name: {name}"
-        except Exception as e:
-            return f"Error processing file {name}: {e}"
+async def main(notes, caregivers, final):
     
-    # Validate that all required files are uploaded
-    if df_caregivers is None:
-        return "Error: 'list of caregivers' file is missing!"
-    if df_notes is None:
-        return "Error: 'notes' file is missing!"
-    if df_final is None:
-        return "Error: 'final' file is missing!"
-
+    df_caregivers = pd.read_csv(caregivers)
+    df_notes = pd.read_csv(notes)
+    df_final = pd.read_csv(final)
+    
     # Get only active employees and format the dataframe where relevant
     active_caregivers = df_caregivers[
         (df_caregivers['Status'] == "Active") &

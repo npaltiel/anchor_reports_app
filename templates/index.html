@@ -4,9 +4,17 @@
     <title>Run Script</title>
 </head>
 <body>
-    <h1>Upload all 3 files together (Notes, Caregivers, Disciplinary Final)</h1>
+    <h1>Upload the 3 files</h1>
     <form action="/upload" method="post" enctype="multipart/form-data">
-        <input type="file" name="files" multiple>
+        <label for="Notes">Notes:</label>
+        <input type="file" id="Notes" name="Notes"><br><br>
+
+        <label for="Caregivers">Caregivers:</label>
+        <input type="file" id="Caregivers" name="Caregivers"><br><br>
+
+        <label for="Final">Disciplinary Final:</label>
+        <input type="file" id="Final" name="Final"><br><br>
+
         <button type="submit">Upload</button>
     </form>
 </body>
