@@ -1,8 +1,13 @@
-from APIkeys import app_name, app_secret, app_key
+import os
 import math
 import xml.etree.ElementTree as ET
 from get_requests import get_caregiver_id
 from asynchronous import retry_soap_request
+
+app_name = os.getenv("APP_NAME") 
+api_secret = os.getenv("API_SECRET")  
+api_key = os.getenv("APP_KEY")
+
 
 
 def get_employment_types(caregiver):

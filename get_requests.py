@@ -1,9 +1,14 @@
-from APIkeys import app_name, app_secret, app_key
+import os
 import requests
 import asyncio
 import aiohttp
 import xml.etree.ElementTree as ET
 from asynchronous import async_soap_request
+
+app_name = os.getenv("APP_NAME") 
+api_secret = os.getenv("API_SECRET")  
+api_key = os.getenv("APP_KEY")
+
 
 
 async def get_caregiver_id(caregiver_code):
