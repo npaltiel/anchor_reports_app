@@ -6,7 +6,7 @@ from asynchronous import retry_soap_request
 
 app_name = os.getenv("APP_NAME") 
 api_secret = os.getenv("API_SECRET")  
-api_key = os.getenv("APP_KEY")
+api_key = os.getenv("API_KEY")
 
 
 
