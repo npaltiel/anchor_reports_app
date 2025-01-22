@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
 import asyncio
+import io
 from get_requests import get_teams, get_notification_methods
 from post_team import update_team
 
@@ -49,8 +50,9 @@ async def main(notes, caregivers, final):
     new_final.name = 'Caregiver Code - Office'
     df_final = pd.concat([df_final, new_final], ignore_index=True)
     df_final.drop_duplicates(inplace=True)
-    csv_file = "C:\\Users\\nochum.paltiel\\OneDrive - Anchor Home Health care\\Documents\\Caregiver Team Report\\Disciplinary Final.csv"
-    df_final.to_csv(csv_file, index=False)
+    processed_file = io.BytesIO()
+    df_final.to_csv(processed_file, index=False)
+    processed_file.seek(0)  # Reset pointer to start
 
     # Define the conditions and choices for Discipline Expiry Date
     conditions = [
@@ -201,5 +203,5 @@ async def main(notes, caregivers, final):
 
     return (f"Initial Successes: {first_success_count} <br> "
             f"Secondary Successes: {second_success_count} <br> "
-            f"Failures: {len(failed_caregivers)}")
+            f"Failures: {len(failed_caregivers)}", processed_file)
 

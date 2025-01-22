@@ -1,6 +1,8 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session, send_file
 from markupsafe import Markup
+import base64
 import asyncio
+import io
 import script  # Import your script here
 
 app = Flask(__name__)
@@ -20,7 +22,12 @@ def upload_files():
     if not notes or not caregivers or not final:
         return redirect(url_for('home', error="All three files must be uploaded!"))
     
-    session['results'] = asyncio.run(script.main(notes, caregivers, final))
+    results, processed_file = asyncio.run(script.main(notes, caregivers, final))
+
+    session['results'] = results
+    session['processed_file'] = base64.b64encode(processed_file.getvalue()).decode('utf-8')
+
+
     return redirect(url_for('results'))  # Return the results
 
 @app.route('/results')
@@ -28,11 +35,27 @@ def results():
     # Get results from session
     results = session.pop('results', None)  # Pop ensures it's cleared after showing
 
-    if results is None:
+    if not results:
         return redirect(url_for('home'))
 
     results = Markup(results)
-    return render_template('results.html', results=results)  # Display results
+    return render_template('results.html', results=results, download_url=url_for('download_processed'))
+
+@app.route('/download')
+def download_processed():
+    # Serve the processed file for download
+    processed_file_data = session.pop('processed_file', None)
+
+    # Decode the Base64 string back into a BytesIO object
+    processed_file = io.BytesIO(base64.b64decode(processed_file_data))
+
+    return send_file(
+        processed_file,
+        mimetype='text/csv',
+        as_attachment=True,
+        download_name='Disciplinary Final (Updated).csv'
+    )
+
     
     
 if __name__ == '__main__':
