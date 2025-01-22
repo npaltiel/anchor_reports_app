@@ -8,6 +8,10 @@ app_name = os.getenv("APP_NAME")
 api_secret = os.getenv("API_SECRET")  
 api_key = os.getenv("API_KEY")
 
+app_name = 'ANTH1476'
+api_secret = '8d2a50da-b799-4ce1-b780-920203e2edec'
+api_key = 'MQAwADIANgA2ADgALQBEAEMANABCADAARQAzADMANgAzAEQANgBDADgARgBFADIAMwA2ADMANQA3AEUAMQA2ADgAOQBBAEQAMQA='
+
 
 
 def get_employment_types(caregiver):
