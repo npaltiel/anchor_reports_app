@@ -3,6 +3,7 @@ import asyncio
 import script  # Import your script here
 
 app = Flask(__name__)
+app.secret_key = 'ANCH1234'
 
 @app.route('/')
 def home():
