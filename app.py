@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, session, Markup
+from flask import Flask, request, render_template, redirect, url_for, session
+from markupsafe import Markup
 import asyncio
 import script  # Import your script here
 
