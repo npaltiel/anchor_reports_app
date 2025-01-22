@@ -29,7 +29,7 @@ def results():
     results = session.pop('results', None)  # Pop ensures it's cleared after showing
     results = Markup(results)
 
-    if not results:
+    if results is None:
         return redirect(url_for('home'))  # Redirect to home if no results
     return render_template('results.html', results=results)  # Display results
     
