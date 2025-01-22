@@ -1,6 +1,6 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect, url_for, session
 import asyncio
-import test_script  # Import your script here
+import caregiver_team_app.script as script  # Import your script here
 
 app = Flask(__name__)
 
@@ -18,8 +18,16 @@ def upload_files():
     if not notes or not caregivers or not final:
         return "All three files must be uploaded!", 400
     
-    results = asyncio.run(test_script.main(notes, caregivers, final))
-    return results  # Return the results
+    session['results'] = asyncio.run(script.main(notes, caregivers, final))
+    return redirect(url_for('results'))  # Return the results
+
+@app.route('/results')
+def results():
+    # Get results from session
+    results = session.pop('results', None)  # Pop ensures it's cleared after showing
+    if not results:
+        return redirect(url_for('main'))  # Redirect to main if no results
+    return render_template('results.html', results=results)  # Display results
     
 if __name__ == '__main__':
     app.run(debug=True)
