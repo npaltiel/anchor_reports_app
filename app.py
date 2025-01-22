@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template, redirect, url_for, session
 import asyncio
-import caregiver_team_app.script as script  # Import your script here
+import script  # Import your script here
 
 app = Flask(__name__)
 
