@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, session, Markup
 import asyncio
 import script  # Import your script here
 
@@ -26,8 +26,10 @@ def upload_files():
 def results():
     # Get results from session
     results = session.pop('results', None)  # Pop ensures it's cleared after showing
+    results = Markup(results)
+
     if not results:
-        return redirect(url_for('main'))  # Redirect to main if no results
+        return redirect(url_for('home'))  # Redirect to home if no results
     return render_template('results.html', results=results)  # Display results
     
 if __name__ == '__main__':
