@@ -6,6 +6,12 @@
 <body>
     <h1>Caregiver Team Update</h1>
     <h2>Upload the 3 files</h2>
+
+    <!-- Display error message if it exists -->
+    {% if request.args.get('error') %}
+    <p style="color: red; font-weight: bold;">{{ request.args.get('error') }}</p>
+    {% endif %}
+
     <form action="/upload" method="post" enctype="multipart/form-data">
         <label for="Notes">Notes:</label>
         <input type="file" id="Notes" name="Notes"><br><br>

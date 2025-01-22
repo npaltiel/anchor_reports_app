@@ -18,7 +18,7 @@ def upload_files():
 
     # Check if files are uploaded
     if not notes or not caregivers or not final:
-        return "All three files must be uploaded!", 400
+        return redirect(url_for('home', error="All three files must be uploaded!"))
     
     session['results'] = asyncio.run(script.main(notes, caregivers, final))
     return redirect(url_for('results'))  # Return the results
