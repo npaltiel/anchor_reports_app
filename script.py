@@ -120,8 +120,8 @@ async def main(notes, caregivers, final):
 
     active_caregivers['Probation Start Date'] = prob_date
 
-    # Use Test Case
-    active_caregivers = active_caregivers[active_caregivers['Caregiver Code - Office'] == "ANT-11755"]
+    # # Use Test Case
+    # active_caregivers = active_caregivers[active_caregivers['Caregiver Code - Office'] == "ANT-11755"]
 
     make_probation = active_caregivers[
         (active_caregivers['Team'] != "Probation") & (active_caregivers['Disciplinary'] == False) & ((
@@ -152,9 +152,9 @@ async def main(notes, caregivers, final):
     make_tier1 = pd.concat([make_tier1, back_to_1], ignore_index=True)
 
     
-    prob_dict = active_caregivers.to_dict(orient='index')
-    tier1_dict = active_caregivers.to_dict(orient='index')
-    tier2_dict = active_caregivers.to_dict(orient='index')
+    prob_dict = make_probation.to_dict(orient='index')
+    tier1_dict = make_tier1.to_dict(orient='index')
+    tier2_dict = make_tier2.to_dict(orient='index')
 
     teams_dict = await get_teams()
     # Gather async tasks for team updates
