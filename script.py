@@ -8,11 +8,10 @@ from post_team import update_team
 
 
 async def main(notes, caregivers, final):
-    
     df_caregivers = pd.read_csv(caregivers)
     df_notes = pd.read_csv(notes)
     df_final = pd.read_csv(final)
-    
+
     # Get only active employees and format the dataframe where relevant
     active_caregivers = df_caregivers[
         (df_caregivers['Status'] == "Active") &
@@ -23,13 +22,12 @@ async def main(notes, caregivers, final):
         ].copy().reset_index(drop=True)
 
     active_caregivers['Hire Date'] = pd.to_datetime(active_caregivers['Hire Date'])
-    active_caregivers['Rehire Date'] = pd.to_datetime(active_caregivers['Rehire Date'],
-                                                      format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d')
+    active_caregivers['Rehire Date'] = pd.to_datetime(active_caregivers['Rehire Date']).dt.strftime('%Y-%m-%d')
     active_caregivers['First Work Date'] = pd.to_datetime(active_caregivers['First Work Date'])
     active_caregivers['Last Work Date'] = pd.to_datetime(active_caregivers['Last Work Date'])
-    active_caregivers['DOB'] = pd.to_datetime(active_caregivers['DOB'], format='%m/%d/%Y').dt.strftime('%Y-%m-%d')
-    active_caregivers['Application Date'] = pd.to_datetime(active_caregivers['Application Date'],
-                                                           format='%m/%d/%Y %H:%M').dt.strftime('%Y-%m-%d')
+    active_caregivers['DOB'] = pd.to_datetime(active_caregivers['DOB']).dt.strftime('%Y-%m-%d')
+    active_caregivers['Application Date'] = pd.to_datetime(active_caregivers['Application Date']).dt.strftime(
+        '%Y-%m-%d')
 
     # problematic_codes = []
     # active_caregivers = active_caregivers[
@@ -151,7 +149,6 @@ async def main(notes, caregivers, final):
 
     make_tier1 = pd.concat([make_tier1, back_to_1], ignore_index=True)
 
-    
     prob_dict = make_probation.to_dict(orient='index')
     tier1_dict = make_tier1.to_dict(orient='index')
     tier2_dict = make_tier2.to_dict(orient='index')
@@ -204,4 +201,3 @@ async def main(notes, caregivers, final):
     return (f"Initial Successes: {first_success_count} <br> "
             f"Secondary Successes: {second_success_count} <br> "
             f"Failures: {len(failed_caregivers)}", processed_file)
-
