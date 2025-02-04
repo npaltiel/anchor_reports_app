@@ -1,3 +1,17 @@
+.homepage-link {
+    display: block;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    color: #007BFF;
+    text-decoration: none;
+    margin-top: 20px;
+}
+
+.homepage-link:hover {
+    text-decoration: underline;
+}
+
 .instructions-heading {
     text-align: center;
     font-size: 24px;

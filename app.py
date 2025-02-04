@@ -3,7 +3,7 @@ from markupsafe import Markup
 import base64
 import asyncio
 import io
-import script  # Import your script here
+import caregiver_team_update  # Import your script here
 from log import log_run, db
 
 app = Flask(__name__)
@@ -15,7 +15,7 @@ def home():
     logs = ref.order_by_key().limit_to_last(50).get() # Get last 50 logs
 
     logs = list(logs.values())[::-1] if logs else []  # Reverse them for newest first
-    
+
     return render_template('index.html', logs=logs)
 
 @app.route('/upload', methods=['POST'])
@@ -28,26 +28,22 @@ def upload_files():
     if not notes or not caregivers or not final:
         return redirect(url_for('home', error="All three files must be uploaded!"))
     
-    results, processed_file = asyncio.run(script.main(notes, caregivers, final))
+    results, processed_file = asyncio.run(caregiver_team_update.main(notes, caregivers, final))
 
     log_run(results)
 
-    # session['results'] = results
     session['processed_file'] = base64.b64encode(processed_file.getvalue()).decode('utf-8')
 
 
     return redirect(url_for('home'))  # Return the results
 
-# @app.route('/results')
-# def results():
-#     # Get results from session
-#     results = session.pop('results', None)  # Pop ensures it's cleared after showing
+@app.route('/caregiver_team')
+def caregiver_team_update():
+    return render_template('caregiver_team.html')
 
-#     if not results:
-#         return redirect(url_for('home'))
-
-#     results = Markup(results)
-#     return render_template('results.html', results=results, download_url=url_for('download_processed'))
+@app.route('/soc')
+def soc_report():
+    return render_template('soc.html')
 
 @app.route('/download')
 def download_processed():

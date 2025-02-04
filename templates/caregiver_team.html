@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Caregiver Team Update</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Caregiver Team Update</h1>
+    <a href="{{ url_for('home') }}" class="homepage-link">Anchor Scripts Home</a>
+    
+    <h2 class="instructions-heading">Instructions</h2>
+    <div class="steps-container">
+        <!-- Left Column: Step 1 & Step 2 -->
+        <div class="steps-column">
+            <h3>Step 1: Gather Required Documents</h3>
+            <p>a) Compile Caregiver Notes for the last 90 days (Combine report from Reporting Tool for last week & historical report)</p>
+            <p>b) Download List of Caregivers report (from Reporting Tool)</p>
+            <p>c) Locate Historical list of Disciplinary Final caregivers</p>
+    
+            <h3>Step 2: Run Report</h3>
+            <p>a) Upload each file where directed</p>
+            <p>b) Click Run</p>
+        </div>
+    
+        <!-- Right Column: Step 3 & Step 4 -->
+        <div class="steps-column">
+            <h3>Step 3: Assess Results</h3>
+            <p>View Report Results in the Processing History Table on the right-hand side</p>
+    
+            <h3>Step 4: Prepare for Next Run</h3>
+            <p>Click <em>Download Processed File</em> link to download the new Disciplinary Final CSV that will be used for the next Report Run</p>
+        </div>
+    </div>
+    
+    <h2 class="instructions-heading">Report Run</h2>
+    <div class="container">
+        <!-- Upload Form on the Left -->
+        <div class="upload-section">
+            <h2>Upload the 3 files</h2>
+            <!-- Display error message if it exists -->
+            {% if request.args.get('error') %}
+            <p style="color: red; font-weight: bold;">{{ request.args.get('error') }}</p>
+            {% endif %}
+
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <label for="Notes">Notes:</label>
+                <input type="file" id="Notes" name="Notes"><br><br>
+
+                <label for="Caregivers">Caregivers:</label>
+                <input type="file" id="Caregivers" name="Caregivers"><br><br>
+
+                <label for="Final">Disciplinary Final:</label>
+                <input type="file" id="Final" name="Final"><br><br>
+
+                <button type="submit">Run</button>
+            </form>
+        </div>
+
+        <!-- Log Table on the Right -->
+        <div class="log-section">
+            <h2>Processing History</h2>
+            {% if logs %}
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        let timestamps = document.querySelectorAll(".utc-time");
+                        timestamps.forEach(ts => {
+                            let utcDate = new Date(ts.textContent + " UTC");  // Parse as UTC
+                            ts.textContent = utcDate.toLocaleString();  // Convert to local time
+                        });
+                    });
+                </script>
+                <table>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Results</th>
+                    </tr>
+                    {% for log in logs %}
+                    <tr>
+                        <td class="utc-time">{{ log.timestamp }}</td>
+                        <td>{{ log.results }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No logs available.</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{{ download_url }}">Download Processed File</a>
+</body>
+</html>
