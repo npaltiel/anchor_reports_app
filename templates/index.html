@@ -2,27 +2,55 @@
 <html>
 <head>
     <title>Anchor Scripts</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>Caregiver Team Update</h1>
-    <h2>Upload the 3 files</h2>
 
-    <!-- Display error message if it exists -->
-    {% if request.args.get('error') %}
-    <p style="color: red; font-weight: bold;">{{ request.args.get('error') }}</p>
-    {% endif %}
+    <div class="container">
+        <!-- Upload Form on the Left -->
+        <div class="upload-section">
+            <h2>Upload the 3 files</h2>
+            <!-- Display error message if it exists -->
+            {% if request.args.get('error') %}
+            <p style="color: red; font-weight: bold;">{{ request.args.get('error') }}</p>
+            {% endif %}
 
-    <form action="/upload" method="post" enctype="multipart/form-data">
-        <label for="Notes">Notes:</label>
-        <input type="file" id="Notes" name="Notes"><br><br>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <label for="Notes">Notes:</label>
+                <input type="file" id="Notes" name="Notes"><br><br>
 
-        <label for="Caregivers">Caregivers:</label>
-        <input type="file" id="Caregivers" name="Caregivers"><br><br>
+                <label for="Caregivers">Caregivers:</label>
+                <input type="file" id="Caregivers" name="Caregivers"><br><br>
 
-        <label for="Final">Disciplinary Final:</label>
-        <input type="file" id="Final" name="Final"><br><br>
+                <label for="Final">Disciplinary Final:</label>
+                <input type="file" id="Final" name="Final"><br><br>
 
-        <button type="submit">Run</button>
-    </form>
+                <button type="submit">Run</button>
+            </form>
+        </div>
+
+        <!-- Log Table on the Right -->
+        <div class="log-section">
+            <h2>Processing History</h2>
+            {% if logs %}
+                <table>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>Results</th>
+                    </tr>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.timestamp }}</td>
+                        <td>{{ log.results }}</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p>No logs available.</p>
+            {% endif %}
+        </div>
+    </div>
+    <a href="{{ download_url }}">Download Processed File</a>
 </body>
 </html>

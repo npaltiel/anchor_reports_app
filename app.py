@@ -4,13 +4,19 @@ import base64
 import asyncio
 import io
 import script  # Import your script here
+from log import log_run, db
 
 app = Flask(__name__)
 app.secret_key = 'ANCH1234'
 
 @app.route('/')
 def home():
-    return render_template('index.html')  # Create a simple HTML form for uploads
+    ref = db.reference("/logs")
+    logs = ref.order_by_key().limit_to_last(50).get() # Get last 50 logs
+
+    logs = list(logs.values())[::-1] if logs else []  # Reverse them for newest first
+    
+    return render_template('index.html', logs=logs)
 
 @app.route('/upload', methods=['POST'])
 def upload_files():
@@ -24,22 +30,24 @@ def upload_files():
     
     results, processed_file = asyncio.run(script.main(notes, caregivers, final))
 
-    session['results'] = results
+    log_run(results)
+
+    # session['results'] = results
     session['processed_file'] = base64.b64encode(processed_file.getvalue()).decode('utf-8')
 
 
-    return redirect(url_for('results'))  # Return the results
+    return redirect(url_for('home'))  # Return the results
 
-@app.route('/results')
-def results():
-    # Get results from session
-    results = session.pop('results', None)  # Pop ensures it's cleared after showing
+# @app.route('/results')
+# def results():
+#     # Get results from session
+#     results = session.pop('results', None)  # Pop ensures it's cleared after showing
 
-    if not results:
-        return redirect(url_for('home'))
+#     if not results:
+#         return redirect(url_for('home'))
 
-    results = Markup(results)
-    return render_template('results.html', results=results, download_url=url_for('download_processed'))
+#     results = Markup(results)
+#     return render_template('results.html', results=results, download_url=url_for('download_processed'))
 
 @app.route('/download')
 def download_processed():
@@ -55,7 +63,6 @@ def download_processed():
         as_attachment=True,
         download_name='Disciplinary Final (Updated).csv'
     )
-
     
     
 if __name__ == '__main__':
