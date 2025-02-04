@@ -34,6 +34,15 @@
         <div class="log-section">
             <h2>Processing History</h2>
             {% if logs %}
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        let timestamps = document.querySelectorAll(".utc-time");
+                        timestamps.forEach(ts => {
+                            let utcDate = new Date(ts.textContent + " UTC");  // Parse as UTC
+                            ts.textContent = utcDate.toLocaleString();  // Convert to local time
+                        });
+                    });
+                </script>
                 <table>
                     <tr>
                         <th>Timestamp</th>
@@ -41,7 +50,7 @@
                     </tr>
                     {% for log in logs %}
                     <tr>
-                        <td>{{ log.timestamp }}</td>
+                        <td class="utc-time">{{ log.timestamp }}</td>
                         <td>{{ log.results }}</td>
                     </tr>
                     {% endfor %}

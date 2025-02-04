@@ -1,6 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials, db
-from datetime import datetime
+from datetime import datetime, timezone
 import json
 import os
 
@@ -21,6 +21,6 @@ def log_run(results):
     """Log the run details to Firebase Realtime Database."""
     ref = db.reference("/logs")
     ref.push({
-        "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
         "results": results
     })
