@@ -1,3 +1,11 @@
+.instructions-heading {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 0;
+    text-decoration: underline;
+}
+
 /* Use Flexbox for side-by-side layout */
 .steps-container {
     display: flex;
