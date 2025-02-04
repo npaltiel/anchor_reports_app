@@ -1,4 +1,48 @@
 /* Use Flexbox for side-by-side layout */
+.steps-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 20px;
+}
+
+/* Style each column */
+.steps-column {
+    width: 48%; /* Make columns nearly equal width */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+/* Improve spacing and readability */
+.steps-column h3 {
+    margin-top: 0;
+    margin-bottom: 5px; 
+    color: #333;
+}
+
+/* Larger space between different steps */
+.steps-column h3:not(:first-child) {  
+    margin-top: 20px; /* Adds extra space between Step 1 and Step 2 */
+}
+
+.steps-column p {
+    margin: 5px 0;
+    font-size: 16px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .steps-container {
+        flex-direction: column;
+    }
+    .steps-column {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+}
+
 .container {
     display: flex;
     justify-content: space-between;
