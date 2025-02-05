@@ -13,7 +13,7 @@ else:
 
 # Initialize Firebase
 firebase_admin.initialize_app(cred, {
-    "databaseURL": os.getenv("FIREBASE_DATABASE_URL") or "https://caregiver-team-app-default-rtdb.firebaseio.com"
+    "databaseURL": os.getenv("FIREBASE_DATABASE_URL")
 })
 
 database = db
