@@ -3,8 +3,8 @@ import numpy as np
 from datetime import datetime, timedelta
 import asyncio
 import io
-from get_requests import get_teams, get_notification_methods
-from post_team import update_team
+from caregiver_team_scripts.get_requests import get_teams, get_notification_methods
+from caregiver_team_scripts.post_team import update_team
 
 
 async def main(notes, caregivers, final):

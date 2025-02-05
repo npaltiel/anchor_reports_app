@@ -1,6 +1,5 @@
 import firebase_admin
 from firebase_admin import credentials, db
-from datetime import datetime, timezone
 import json
 import os
 
@@ -14,13 +13,7 @@ else:
 
 # Initialize Firebase
 firebase_admin.initialize_app(cred, {
-    "databaseURL": os.getenv("FIREBASE_DATABASE_URL")
+    "databaseURL": os.getenv("FIREBASE_DATABASE_URL") or "https://caregiver-team-app-default-rtdb.firebaseio.com"
 })
 
-def log_run(results):
-    """Log the run details to Firebase Realtime Database."""
-    ref = db.reference("/logs")
-    ref.push({
-        "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S"),
-        "results": results
-    })
+database = db

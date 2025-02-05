@@ -2,19 +2,19 @@ from flask import Blueprint, request, render_template, redirect, url_for, sessio
 import base64
 import asyncio
 import io
-import caregiver_team_script  # Import your script here
-from log import log_run, db
+import caregiver_team_scripts.caregiver_team_script as caregiver_team_script
+from caregiver_team_scripts.caregiver_team_log import log_run, database
 
 caregiver_team_bp = Blueprint("caregiver_team", __name__, url_prefix="/caregiver_team")
 
 
 @caregiver_team_bp.route("/")
-def caregiver_team_script():
-    ref = db.reference("/logs")
+def caregiver_team_home():
+    ref = database.reference("/caregiver_team_logs")
     logs = ref.order_by_key().limit_to_last(50).get() # Get last 50 logs
 
     logs = list(logs.values())[::-1] if logs else []  # Reverse them for newest first
-    return render_template('caregiver_team.html', logs=logs, download_url="/download")
+    return render_template('caregiver_team.html', logs=logs, download_url=url_for("caregiver_team.download_processed"))
 
 
 @caregiver_team_bp.route('/upload', methods=['POST'])
@@ -25,7 +25,7 @@ def upload_files():
 
     # Check if files are uploaded
     if not notes or not caregivers or not final:
-        return redirect(url_for('caregiver_team', error="All three files must be uploaded!"))
+        return redirect(url_for('caregiver_team.caregiver_team_home', error="All three files must be uploaded!"))
     
     results, processed_file = asyncio.run(caregiver_team_script.main(notes, caregivers, final))
 
@@ -33,7 +33,7 @@ def upload_files():
 
     session['processed_file'] = base64.b64encode(processed_file.getvalue()).decode('utf-8')
 
-    return redirect(url_for('home'))  # Return the results
+    return redirect(url_for('caregiver_team.caregiver_team_home'))
 
 
 @caregiver_team_bp.route('/download')

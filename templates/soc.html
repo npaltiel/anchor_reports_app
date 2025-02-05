@@ -13,15 +13,17 @@
         <!-- Left Column: Step 1 & Step 2 -->
         <div class="steps-column">
             <h3>Step 1: Gather Required Documents</h3>
-            <p>Download Visit Report for last 7 months (All Offices)</p>
-    
-            <h3>Step 2: Run Report</h3>
-            <p>a) Upload file where directed</p>
-            <p>b) Click Run</p>
+            <p>a) Download Visit Report for last 7 months (All Offices)</p>
+            <p>b) Download List of Patients (Reporting Tool)</p>
+            <p>a) Locate Contract Lookup for contract categories</p>
         </div>
     
         <!-- Right Column: Step 3 & Step 4 -->
         <div class="steps-column">    
+            <h3>Step 2: Run Report</h3>
+            <p>a) Upload file where directed</p>
+            <p>b) Click Run</p>
+
             <h3>Step 3: Download </h3>
             <p>Click <em>Download SOC</em> link to download the SOC Report</p>
         </div>
@@ -33,13 +35,19 @@
         <div class="upload-section">
             <h2>Upload Visit Report</h2>
             <!-- Display error message if it exists -->
-            {% if request.args.get('error') %}
-            <p style="color: red; font-weight: bold;">{{ request.args.get('error') }}</p>
+            {% if request.args.get('upload_error') %}
+            <p style="color: red; font-weight: bold;">{{ request.args.get('upload_error') }}</p>
             {% endif %}
 
-            <form action="/upload" method="post" enctype="multipart/form-data">
+            <form action="/soc/upload" method="post" enctype="multipart/form-data">
                 <label for="Visits">Visit Report</label>
                 <input type="file" id="Visits" name="Visits"><br><br>
+
+                <label for="Patients">List of Patients</label>
+                <input type="file" id="Patients" name="Patients"><br><br>
+
+                <label for="Contracts">Contract Lookup</label>
+                <input type="file" id="Contracts" name="Contracts"><br><br>
 
                 <button type="submit">Run</button>
             </form>
@@ -75,6 +83,10 @@
             {% endif %}
         </div>
     </div>
+    <!-- Display error message if it exists -->
+    {% if request.args.get('download_error') %}
+    <p style="color: red; font-weight: bold;">{{ request.args.get('download_error') }}</p>
+    {% endif %}
     <a href="{{ download_url }}">Download SOC</a>
 </body>
 </html>

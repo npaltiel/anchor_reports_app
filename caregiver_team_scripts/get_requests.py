@@ -1,6 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
-from asynchronous import async_soap_request
+from caregiver_team_scripts.asynchronous import async_soap_request
 
 app_name = os.getenv("APP_NAME") 
 api_secret = os.getenv("API_SECRET")  
