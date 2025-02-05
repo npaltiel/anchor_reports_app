@@ -31,21 +31,15 @@
     <div class="container">
         <!-- Upload Form on the Left -->
         <div class="upload-section">
-            <h2>Upload the 3 files</h2>
+            <h2>Upload Visit Report</h2>
             <!-- Display error message if it exists -->
             {% if request.args.get('error') %}
             <p style="color: red; font-weight: bold;">{{ request.args.get('error') }}</p>
             {% endif %}
 
             <form action="/upload" method="post" enctype="multipart/form-data">
-                <label for="Notes">Notes:</label>
-                <input type="file" id="Notes" name="Notes"><br><br>
-
-                <label for="Caregivers">Caregivers:</label>
-                <input type="file" id="Caregivers" name="Caregivers"><br><br>
-
-                <label for="Final">Disciplinary Final:</label>
-                <input type="file" id="Final" name="Final"><br><br>
+                <label for="Visits">Visit Report</label>
+                <input type="file" id="Visits" name="Visits"><br><br>
 
                 <button type="submit">Run</button>
             </form>
