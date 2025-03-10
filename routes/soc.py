@@ -4,12 +4,14 @@ from datetime import datetime
 import io
 import soc_scripts.soc_script as soc_script
 from soc_scripts.soc_logs import log_run, database
+from auth import login_required  # Import login protection
 
 
-soc_bp = Blueprint("soc", __name__, url_prefix="/soc")
+soc_bp = Blueprint("soc", __name__)
 TEMP_FILE_PATH = "temp_soc_file.xlsx"
 
 @soc_bp.route('/')
+@login_required
 def soc_home():
     ref = database.reference("/soc_logs")
     logs = ref.order_by_key().limit_to_last(50).get() # Get last 50 logs

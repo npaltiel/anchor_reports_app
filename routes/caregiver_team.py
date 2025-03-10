@@ -4,11 +4,14 @@ import asyncio
 import io
 import caregiver_team_scripts.caregiver_team_script as caregiver_team_script
 from caregiver_team_scripts.caregiver_team_log import log_run, database
+from auth import login_required  # Import login protection
 
-caregiver_team_bp = Blueprint("caregiver_team", __name__, url_prefix="/caregiver_team")
+
+caregiver_team_bp = Blueprint("caregiver_team", __name__)
 
 
 @caregiver_team_bp.route("/")
+@login_required
 def caregiver_team_home():
     ref = database.reference("/caregiver_team_logs")
     logs = ref.order_by_key().limit_to_last(50).get() # Get last 50 logs
