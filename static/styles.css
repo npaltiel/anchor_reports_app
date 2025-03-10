@@ -12,6 +12,30 @@
     text-decoration: underline;
 }
 
+/* Logout button container */
+.logout-container {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+}
+
+/* Logout button styling */
+.logout-button {
+    display: inline-block;
+    padding: 10px 15px;
+    background-color: #d9534f;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Hover effect */
+.logout-button:hover {
+    background-color: #c9302c;
+}
+
+
 .instructions-heading {
     text-align: center;
     font-size: 24px;
