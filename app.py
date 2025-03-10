@@ -25,22 +25,22 @@ def check_session_timeout():
         last_activity = session.get('last_activity')
         if last_activity:
             try:
-                # Ensure last_activity is a string before conversion
+                # Ensure last_activity is always a string before conversion
                 if isinstance(last_activity, str):
-                    last_activity = datetime.datetime.fromisoformat(last_activity)
-                else:
-                    last_activity = datetime.datetime.utcfromtimestamp(last_activity)  # Fallback for timestamp format
-                
-                now = datetime.datetime.now(pytz.utc)  # Ensure consistent timezone
+                    last_activity = datetime.datetime.fromisoformat(last_activity).replace(tzinfo=pytz.utc)
+                elif isinstance(last_activity, (int, float)):  # If it's a timestamp
+                    last_activity = datetime.datetime.fromtimestamp(last_activity, tz=datetime.timezone.utc)
+
+                now = datetime.datetime.now(datetime.timezone.utc)  # Use timezone-aware UTC datetime
 
                 if (now - last_activity).total_seconds() > SESSION_TIMEOUT:
                     session.clear()  # Log out user
                     return redirect(url_for('login'))
-            except ValueError:
+            except (ValueError, TypeError):
                 session.clear()  # Handle invalid session data
-        
-        # Update last activity timestamp
-        session['last_activity'] = datetime.datetime.now(pytz.utc).isoformat()
+
+        # Store current time as an ISO string
+        session['last_activity'] = datetime.datetime.now(datetime.timezone.utc).isoformat()
 
 
 @app.route('/login', methods=['GET', 'POST'])
