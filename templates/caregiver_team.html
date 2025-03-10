@@ -13,9 +13,14 @@
         <!-- Left Column: Step 1 & Step 2 -->
         <div class="steps-column">
             <h3>Step 1: Gather Required Documents</h3>
-            <p>a) Compile Caregiver Notes for the last 90 days (Combine report from Reporting Tool for last week & historical report)</p>
-            <p>b) Download List of Caregivers report (from Reporting Tool)</p>
-            <p>c) Locate Historical list of Disciplinary Final caregivers</p>
+            <p>a) Caregiver Notes</p>
+                <p>i) Reporting Tool -> Caregiver -> Quality -> Caregiver Notes - (Or emailed via reporting schedule)</p>
+                <p>ii) Change date filter to only include Notes from last 10 days or so (Just ensuring all new notes are compiled)</p>
+                <p>iii) Locate <a href="https://anchorhc-my.sharepoint.com/:x:/g/personal/nochum_paltiel_anchorhc_org/EeSKb083k4dGu2KMFxpzPzYBFkQziavCaQZPsLqWpIEDnA?e=jawjtY">Caregiver Notes</a> file in OneDrive</p>
+                <p>iv) Copy all new notes and append to historical Caregiver Notes file</p>
+            <p>b) List of Caregivers</p>
+                <p>i) Reporting Tool -> Caregiver -> Quality -> List of Caregivers (Quality) - (Or emailed via reporting schedule)</p>
+            <p>c) <a href="https://anchorhc-my.sharepoint.com/:x:/g/personal/nochum_paltiel_anchorhc_org/EUVmtMsM6gJJhI6g-YdzPKQB8JqpjOx2nGv9JZwFh9yX_Q?e=lWdH2z">Disciplinary Final</a></p>
     
             <h3>Step 2: Run Report</h3>
             <p>a) Upload each file where directed</p>
@@ -28,7 +33,7 @@
             <p>View Report Results in the Processing History Table on the right-hand side</p>
     
             <h3>Step 4: Prepare for Next Run</h3>
-            <p>Click <em>Download Processed File</em> link to download the new Disciplinary Final CSV that will be used for the next Report Run</p>
+            <p>Click <a href="{{ download_url }}">Download Processed File</a> link to download the new Disciplinary Final CSV that will be used for the next Report Run</p>
         </div>
     </div>
     
@@ -86,6 +91,5 @@
             {% endif %}
         </div>
     </div>
-    <a href="{{ download_url }}">Download Processed File</a>
 </body>
 </html>
