@@ -1,6 +1,7 @@
 from flask import Flask, request, render_template, redirect, url_for, session, send_file
 from markupsafe import Markup
 import datetime
+import pytz
 import os
 from routes.caregiver_team import caregiver_team_bp
 from routes.soc import soc_bp
@@ -15,16 +16,26 @@ app.register_blueprint(caregiver_team_bp, url_prefix="/caregiver_team")
 app.register_blueprint(soc_bp, url_prefix="/soc")
 
 PASSWORD = os.getenv("APP_PASSWORD")
+SESSION_TIMEOUT = 1800
 
 @app.before_request
 def check_session_timeout():
     """Logout user if inactive for too long."""
     if 'logged_in' in session:
         last_activity = session.get('last_activity')
-        if last_activity and (datetime.datetime.now() - last_activity).total_seconds() > 1800:
-            session.clear()  # Log out user
-            return redirect(url_for('login'))
-        session['last_activity'] = datetime.datetime.now()  # Update last activity timestamp
+        if last_activity:
+            # Convert last_activity from string to datetime
+            last_activity = datetime.datetime.fromisoformat(last_activity)
+
+            # Ensure both datetimes are timezone-naive or timezone-aware
+            now = datetime.datetime.now(pytz.utc)  # Make timezone-aware
+            
+            if (now - last_activity).total_seconds() > SESSION_TIMEOUT:
+                session.clear()  # Log out user
+                return redirect(url_for('login'))
+        
+        # Update last activity timestamp
+        session['last_activity'] = datetime.datetime.now(pytz.utc).isoformat()
 
 
 @app.route('/login', methods=['GET', 'POST'])
