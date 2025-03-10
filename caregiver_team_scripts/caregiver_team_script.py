@@ -41,7 +41,7 @@ async def main(notes, caregivers, final):
                                             in
                                             range(len(active_caregivers))]
 
-    df_notes['Date'] = pd.to_datetime(df_notes['Date'])
+    df_notes['Date'] = pd.to_datetime(df_notes['Date'], format='mixed')
     df_notes = df_notes.rename(columns={'Date': 'Discipline Date'})
 
     new_final = df_notes[df_notes['Subject'] == 'Disciplinary Final'][['Caregiver Code - Office']].copy()
