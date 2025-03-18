@@ -5,6 +5,11 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
+    <!-- Logout Button -->
+    <div class="logout-container">
+        <a href="{{ url_for('logout') }}" class="logout-button">Logout</a>
+    </div>
+    
     <h1>Caregiver Team Update</h1>
     <a href="{{ url_for('home') }}" class="homepage-link">Anchor Scripts Home</a>
     
