@@ -14,7 +14,6 @@ async def main(notes, caregivers, final):
 
     # Get only active employees and format the dataframe where relevant
     active_caregivers = df_caregivers[
-        (df_caregivers['Status'] == "Active") &
         (df_caregivers['Type'] == 'Employee') &
         (~df_caregivers['Caregiver Code - Office'].str.contains("CDP", na=False)) &
         (~df_caregivers['Caregiver Code - Office'].str.contains("ANS", na=False)) &
