@@ -1,5 +1,6 @@
 import os
 import math
+import numpy as np
 import xml.etree.ElementTree as ET
 from caregiver_team_scripts.get_requests import get_caregiver_id
 from caregiver_team_scripts.asynchronous import retry_soap_request
@@ -15,12 +16,12 @@ def get_employment_types(caregiver, add_hcss=False, remove_hcss=False):
     first_work_date = caregiver['First Work Date']
     print(first_work_date)
     print('False Check')
-    print(first_work_date == False)
+    print(not first_work_date or np.isnat(first_work_date))
        
     if add_hcss and 'HCSS' not in types:
         types.append('HCSS')
 
-    if remove_hcss and not first_work_date and 'HCSS' in types:
+    if remove_hcss and (not first_work_date or np.isnat(first_work_date)) and 'HCSS' in types:
         types.remove('HCSS')
 
     res = ''
