@@ -13,10 +13,17 @@ api_secret = '8d2a50da-b799-4ce1-b780-920203e2edec'
 api_key = 'MQAwADIANgA2ADgALQBEAEMANABCADAARQAzADMANgAzAEQANgBDADgARgBFADIAMwA2ADMANQA3AEUAMQA2ADgAOQBBAEQAMQA='
 
 
-def get_employment_types(caregiver):
+def get_employment_types(caregiver, add_hcss=False, remove_hcss=False):
     segment_start = '<Discipline>'
     segment_end = '</Discipline>\n'
     types = caregiver['Employment Type'].split(', ')
+    first_work_date = caregiver['First Work Date']
+       
+    if add_hcss and 'HCSS' not in types:
+        types.append('HCSS')
+
+    if remove_hcss and first_work_date and 'HCSS' in types:
+        types.remove('HCSS')
 
     res = ''
     for type in types:
@@ -25,11 +32,11 @@ def get_employment_types(caregiver):
     return res.rstrip('\n')
 
 
-async def update_team(caregiver, team):
+async def update_team(caregiver, team, add_hcss = False, remove_hcss = False):
     caregiver_code = caregiver['Caregiver Code - Office']
     try:
         caregiver_id = await get_caregiver_id(caregiver_code)
-        employment_types = get_employment_types(caregiver)
+        employment_types = get_employment_types(caregiver, add_hcss, remove_hcss)
 
         rehire = '<RehireDate>' + caregiver['Rehire Date'] + '</RehireDate>' if isinstance(caregiver['Rehire Date'],
                                                                                            str) or not math.isnan(

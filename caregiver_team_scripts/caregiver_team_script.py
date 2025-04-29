@@ -147,18 +147,18 @@ async def main(notes, caregivers, final):
         (~active_caregivers['Caregiver Code - Office'].isin(df_final['Caregiver Code - Office']))
         ].copy().reset_index(drop=True)
 
-    make_tier1 = pd.concat([make_tier1, back_to_1], ignore_index=True)
-
     prob_dict = make_probation.to_dict(orient='index')
-    tier1_dict = make_tier1.to_dict(orient='index')
+    make_tier1_dict = make_tier1.to_dict(orient='index')
+    back_tier1_dict = back_to_1.to_dict(orient='index')
     tier2_dict = make_tier2.to_dict(orient='index')
 
     teams_dict = await get_teams()
     # Gather async tasks for team updates
 
     results = await asyncio.gather(
-        *(update_team(prob_dict[caregiver], teams_dict['Probation']) for caregiver in prob_dict),
-        *(update_team(tier1_dict[caregiver], teams_dict['Tier 1']) for caregiver in tier1_dict),
+        *(update_team(prob_dict[caregiver], teams_dict['Probation'], remove_hcss=True) for caregiver in prob_dict),
+        *(update_team(make_tier1_dict[caregiver], teams_dict['Tier 1'], add_hcss=True) for caregiver in make_tier1_dict),
+        *(update_team(back_tier1_dict[caregiver], teams_dict['Tier 1']) for caregiver in back_tier1_dict),
         *(update_team(tier2_dict[caregiver], teams_dict['Tier 2']) for caregiver in tier2_dict)
     )
 
@@ -168,8 +168,12 @@ async def main(notes, caregivers, final):
         key: details for key, details in prob_dict.items()
         if details.get('Caregiver Code - Office') in retry_caregivers
     }
-    retry_tier1 = {
-        key: details for key, details in tier1_dict.items()
+    retry_make_tier1 = {
+        key: details for key, details in make_tier1_dict.items()
+        if details.get('Caregiver Code - Office') in retry_caregivers
+    }
+    retry_back_tier1 = {
+        key: details for key, details in back_tier1_dict.items()
         if details.get('Caregiver Code - Office') in retry_caregivers
     }
     retry_tier2 = {
@@ -178,8 +182,9 @@ async def main(notes, caregivers, final):
     }
 
     results2 = await asyncio.gather(
-        *(update_team(retry_prob[caregiver], teams_dict['Probation']) for caregiver in retry_prob),
-        *(update_team(retry_tier1[caregiver], teams_dict['Tier 1']) for caregiver in retry_tier1),
+        *(update_team(retry_prob[caregiver], teams_dict['Probation'], remove_hcss=True) for caregiver in retry_prob),
+        *(update_team(retry_make_tier1[caregiver], teams_dict['Tier 1'], add_hcss=True) for caregiver in retry_make_tier1),
+        *(update_team(retry_back_tier1[caregiver], teams_dict['Tier 1']) for caregiver in retry_back_tier1),
         *(update_team(retry_tier2[caregiver], teams_dict['Tier 2']) for caregiver in retry_tier2)
     )
 
