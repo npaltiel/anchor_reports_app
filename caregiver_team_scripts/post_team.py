@@ -9,7 +9,7 @@ app_name = os.getenv("APP_NAME")
 api_secret = os.getenv("API_SECRET")  
 api_key = os.getenv("API_KEY")
 
-def get_employment_types(caregiver, add_hcss=False, remove_hcss=False):
+def get_employment_types(caregiver, *, add_hcss=False, remove_hcss=False):
     segment_start = '<Discipline>'
     segment_end = '</Discipline>\n'
     types = caregiver['Employment Type'].split(', ')
@@ -31,11 +31,11 @@ def get_employment_types(caregiver, add_hcss=False, remove_hcss=False):
     return res.rstrip('\n')
 
 
-async def update_team(caregiver, team, add_hcss = False, remove_hcss = False):
+async def update_team(caregiver, team, *, add_hcss = False, remove_hcss = False):
     caregiver_code = caregiver['Caregiver Code - Office']
     try:
         caregiver_id = await get_caregiver_id(caregiver_code)
-        employment_types = get_employment_types(caregiver, add_hcss, remove_hcss)
+        employment_types = get_employment_types(caregiver, add_hcss=add_hcss, remove_hcss=remove_hcss)
 
         rehire = '<RehireDate>' + caregiver['Rehire Date'] + '</RehireDate>' if isinstance(caregiver['Rehire Date'],
                                                                                            str) or not math.isnan(
