@@ -16,7 +16,6 @@ app.register_blueprint(caregiver_team_bp, url_prefix="/caregiver_team")
 app.register_blueprint(soc_bp, url_prefix="/soc")
 
 PASSWORD = os.getenv("APP_PASSWORD")
-PASSWORD = 'Hi'
 SESSION_TIMEOUT = 1800
 
 @app.before_request

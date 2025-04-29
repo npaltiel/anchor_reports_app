@@ -13,8 +13,7 @@ def get_employment_types(caregiver, add_hcss=False, remove_hcss=False):
     segment_end = '</Discipline>\n'
     types = caregiver['Employment Type'].split(', ')
     first_work_date = caregiver['First Work Date']
-    if first_work_date:
-      print('first work date: ' + first_work_date)
+    print(first_work_date)
     print('False Check')
     print(first_work_date == False)
        
