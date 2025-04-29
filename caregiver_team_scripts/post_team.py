@@ -40,6 +40,10 @@ async def update_team(caregiver, team, *, add_hcss = False, remove_hcss = False)
         rehire = '<RehireDate>' + caregiver['Rehire Date'] + '</RehireDate>' if isinstance(caregiver['Rehire Date'],
                                                                                            str) or not math.isnan(
             caregiver['Rehire Date']) else ""
+        
+        statuses = {'Inactive': 0, 'Active': 1, 'Hold': 2, 'On Leave': 3, 'Terminated': 4, 'Rejected': 5, 'Empty': 6}
+        status = caregiver['Status']
+        status_id = statuses[status]
 
         # Define the XML payload with correct SOAP 1.1 envelope for Search Visits
         payload = f"""<?xml version="1.0" encoding="utf-8"?>
@@ -59,7 +63,7 @@ async def update_team(caregiver, team, *, add_hcss = False, remove_hcss = False)
                 <BirthDate>{caregiver['DOB']}</BirthDate>
                 <SSN>{caregiver['SSN']}</SSN>
                 {rehire}
-                <StatusID>1</StatusID>
+                <StatusID>{status_id}</StatusID>
                 <EmploymentTypes>{employment_types}</EmploymentTypes>
                 <ApplicationDate>{caregiver['Application Date']}</ApplicationDate>
                 <TeamID>{team}</TeamID>
