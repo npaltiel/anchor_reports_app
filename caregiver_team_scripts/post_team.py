@@ -22,7 +22,7 @@ def get_employment_types(caregiver, add_hcss=False, remove_hcss=False):
     if add_hcss and 'HCSS' not in types:
         types.append('HCSS')
 
-    if remove_hcss and first_work_date and 'HCSS' in types:
+    if remove_hcss and not first_work_date and 'HCSS' in types:
         types.remove('HCSS')
 
     res = ''
