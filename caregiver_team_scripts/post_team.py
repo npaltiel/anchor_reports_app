@@ -18,6 +18,7 @@ def get_employment_types(caregiver, add_hcss=False, remove_hcss=False):
     segment_end = '</Discipline>\n'
     types = caregiver['Employment Type'].split(', ')
     first_work_date = caregiver['First Work Date']
+    print(first_work_date)
        
     if add_hcss and 'HCSS' not in types:
         types.append('HCSS')
