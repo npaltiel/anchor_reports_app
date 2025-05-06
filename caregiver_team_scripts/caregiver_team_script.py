@@ -121,7 +121,7 @@ async def main(notes, caregivers, final):
     # active_caregivers = active_caregivers[active_caregivers['Caregiver Code - Office'] == "ANT-11755"]
 
     make_probation = active_caregivers[
-        (active_caregivers['Status'] == 'Active')
+        (active_caregivers['Status'] == 'Active') &
         (active_caregivers['Team'] != "Probation") & 
         (active_caregivers['Disciplinary'] == False) & 
         ((active_caregivers['Probation Start Date'] >= (datetime.today() - timedelta(days=30))) | 
