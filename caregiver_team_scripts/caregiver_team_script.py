@@ -27,6 +27,8 @@ async def main(notes, caregivers, final):
     active_caregivers['DOB'] = pd.to_datetime(active_caregivers['DOB']).dt.strftime('%Y-%m-%d')
     active_caregivers['Application Date'] = pd.to_datetime(active_caregivers['Application Date']).dt.strftime(
         '%Y-%m-%d')
+    active_caregivers['Terminated Date'] = pd.to_datetime(active_caregivers['Terminated Date']).dt.strftime(
+        '%Y-%m-%d')
 
     # problematic_codes = []
     # active_caregivers = active_caregivers[
@@ -122,23 +124,23 @@ async def main(notes, caregivers, final):
 
     make_probation = active_caregivers[
         (active_caregivers['Status'] == 'Active') &
-        (active_caregivers['Team'] != "Probation") & 
-        (active_caregivers['Disciplinary'] == False) & 
-        ((active_caregivers['Probation Start Date'] >= (datetime.today() - timedelta(days=30))) | 
+        (active_caregivers['Team'] != "Probation") &
+        (active_caregivers['Disciplinary'] == False) &
+        ((active_caregivers['Probation Start Date'] >= (datetime.today() - timedelta(days=30))) |
          pd.isnull(active_caregivers['Probation Start Date']))
-         ].copy().reset_index(drop=True)
+        ].copy().reset_index(drop=True)
 
     # Those that are on probation but should be moved to Tier 1
     make_tier1 = active_caregivers[
-        (active_caregivers['Status'] == 'Active') & 
-        (active_caregivers['Team'] == 'Probation') & 
-        (active_caregivers['Probation Start Date'] < (datetime.today() - timedelta(days=30))) & 
+        (active_caregivers['Status'] == 'Active') &
+        (active_caregivers['Team'] == 'Probation') &
+        (active_caregivers['Probation Start Date'] < (datetime.today() - timedelta(days=30))) &
         (active_caregivers['Disciplinary'] == False)
         ].copy().reset_index(drop=True)
 
     # Those that should be moved to Tier 2
     make_tier2 = active_caregivers[
-        (active_caregivers['Team'] != 'Tier 2') & 
+        (active_caregivers['Team'] != 'Tier 2') &
         (active_caregivers['Disciplinary'] == True)
         ].copy().reset_index(drop=True)
 
@@ -160,7 +162,8 @@ async def main(notes, caregivers, final):
 
     results = await asyncio.gather(
         *(update_team(prob_dict[caregiver], teams_dict['Probation']) for caregiver in prob_dict),
-        *(update_team(make_tier1_dict[caregiver], teams_dict['Tier 1'], add_hcss=True) for caregiver in make_tier1_dict),
+        *(update_team(make_tier1_dict[caregiver], teams_dict['Tier 1'], add_hcss=True) for caregiver in
+          make_tier1_dict),
         *(update_team(back_tier1_dict[caregiver], teams_dict['Tier 1']) for caregiver in back_tier1_dict),
         *(update_team(tier2_dict[caregiver], teams_dict['Tier 2']) for caregiver in tier2_dict)
     )
@@ -186,7 +189,8 @@ async def main(notes, caregivers, final):
 
     results2 = await asyncio.gather(
         *(update_team(retry_prob[caregiver], teams_dict['Probation']) for caregiver in retry_prob),
-        *(update_team(retry_make_tier1[caregiver], teams_dict['Tier 1'], add_hcss=True) for caregiver in retry_make_tier1),
+        *(update_team(retry_make_tier1[caregiver], teams_dict['Tier 1'], add_hcss=True) for caregiver in
+          retry_make_tier1),
         *(update_team(retry_back_tier1[caregiver], teams_dict['Tier 1']) for caregiver in retry_back_tier1),
         *(update_team(retry_tier2[caregiver], teams_dict['Tier 2']) for caregiver in retry_tier2)
     )

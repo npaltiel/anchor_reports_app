@@ -5,16 +5,17 @@ import xml.etree.ElementTree as ET
 from caregiver_team_scripts.get_requests import get_caregiver_id
 from caregiver_team_scripts.asynchronous import retry_soap_request
 
-app_name = os.getenv("APP_NAME") 
-api_secret = os.getenv("API_SECRET")  
+app_name = os.getenv("APP_NAME")
+api_secret = os.getenv("API_SECRET")
 api_key = os.getenv("API_KEY")
+
 
 def get_employment_types(caregiver, *, add_hcss=False, remove_hcss=False):
     segment_start = '<Discipline>'
     segment_end = '</Discipline>\n'
     types = caregiver['Employment Type'].split(', ')
     first_work_date = caregiver['First Work Date']
-       
+
     if add_hcss and 'HCSS' not in types and 'SCM' not in types and 'RN' not in types:
         types.append('HCSS')
 
@@ -28,7 +29,7 @@ def get_employment_types(caregiver, *, add_hcss=False, remove_hcss=False):
     return res.rstrip('\n')
 
 
-async def update_team(caregiver, team, *, add_hcss = False, remove_hcss = False):
+async def update_team(caregiver, team, *, add_hcss=False, remove_hcss=False):
     caregiver_code = caregiver['Caregiver Code - Office']
     try:
         caregiver_id = await get_caregiver_id(caregiver_code)
@@ -37,7 +38,9 @@ async def update_team(caregiver, team, *, add_hcss = False, remove_hcss = False)
         rehire = '<RehireDate>' + caregiver['Rehire Date'] + '</RehireDate>' if isinstance(caregiver['Rehire Date'],
                                                                                            str) or not math.isnan(
             caregiver['Rehire Date']) else ""
-        
+        terminated = '<TerminatedDate>' + caregiver['Terminated Date'] + '</TerminatedDate>' if isinstance(
+            caregiver['Terminated Date'], str) or not math.isnan(caregiver['Terminated Date']) else ""
+
         statuses = {'Inactive': 0, 'Active': 1, 'Hold': 2, 'On Leave': 3, 'Terminated': 4, 'Rejected': 5, 'Empty': 6}
         status = caregiver['Status']
         status_id = statuses[status]
@@ -61,6 +64,7 @@ async def update_team(caregiver, team, *, add_hcss = False, remove_hcss = False)
                 <SSN>{caregiver['SSN']}</SSN>
                 {rehire}
                 <StatusID>{status_id}</StatusID>
+                {terminated}
                 <EmploymentTypes>{employment_types}</EmploymentTypes>
                 <ApplicationDate>{caregiver['Application Date']}</ApplicationDate>
                 <TeamID>{team}</TeamID>
