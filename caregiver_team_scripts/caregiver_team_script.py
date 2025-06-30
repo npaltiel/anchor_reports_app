@@ -161,7 +161,7 @@ async def main(notes, caregivers, final):
     # Gather async tasks for team updates
 
     results = await asyncio.gather(
-        *(update_team(prob_dict[caregiver], teams_dict['Probation']) for caregiver in prob_dict),
+        *(update_team(prob_dict[caregiver], teams_dict['Probation'], remove_hcss=True) for caregiver in prob_dict),
         *(update_team(make_tier1_dict[caregiver], teams_dict['Tier 1'], add_hcss=True) for caregiver in
           make_tier1_dict),
         *(update_team(back_tier1_dict[caregiver], teams_dict['Tier 1']) for caregiver in back_tier1_dict),
