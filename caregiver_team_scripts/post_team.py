@@ -60,6 +60,7 @@ async def update_team(caregiver, team, *, add_hcss=False, remove_hcss=False):
               <CaregiverInfo>
                 <CaregiverID>{caregiver_id}</CaregiverID>
                 <FirstName>{caregiver['First Name']}</FirstName>
+                <MiddleName>{caregiver['Middle Name']}</MiddleName>
                 <LastName>{caregiver['Last Name']}</LastName>
                 <Gender>{caregiver['Gender']}</Gender>
                 <BirthDate>{caregiver['DOB']}</BirthDate>
