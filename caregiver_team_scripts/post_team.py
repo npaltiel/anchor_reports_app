@@ -42,6 +42,8 @@ async def update_team(caregiver, team, *, add_hcss=False, remove_hcss=False):
             caregiver['Rehire Date']) else ""
         terminated = '<TerminatedDate>' + caregiver['Terminated Date'] + '</TerminatedDate>' if isinstance(
             caregiver['Terminated Date'], str) or not math.isnan(caregiver['Terminated Date']) else ""
+        
+        middle_name = caregiver['Middle Name'] if isinstance(caregiver['Middle Name'], str) else ""
 
         statuses = {'Inactive': 0, 'Active': 1, 'Hold': 2, 'On Leave': 3, 'Terminated': 4, 'Rejected': 5, 'Empty': 6}
         status = caregiver['Status']
@@ -60,7 +62,7 @@ async def update_team(caregiver, team, *, add_hcss=False, remove_hcss=False):
               <CaregiverInfo>
                 <CaregiverID>{caregiver_id}</CaregiverID>
                 <FirstName>{caregiver['First Name']}</FirstName>
-                <MiddleName>{caregiver['Middle Name']}</MiddleName>
+                {middle_name}
                 <LastName>{caregiver['Last Name']}</LastName>
                 <Gender>{caregiver['Gender']}</Gender>
                 <BirthDate>{caregiver['DOB']}</BirthDate>
